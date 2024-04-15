@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="col 12">
+    <form class="row" method="post" enctype="multipart/form-data">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <div class="card-title">Добавление блюда</div>
+                        </h3>
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">Cоздать</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <div class="card-title">Добавление покупателя</div>
+                        </h3>
+                        <div class="card-body">
+                            {{ formset.management_form }}
+                            {% csrf_token %}
+                            {% for form in formset.forms %}
+                                {{ form.as_p }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
