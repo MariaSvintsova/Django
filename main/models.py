@@ -35,7 +35,7 @@ class Dish(models.Model):
         verbose_name_plural = 'Предметы'
 
 class Customer(models.Model):
-    title = models.CharField(max_length=150, verbose_name='название')
+    title = models.CharField(max_length=150, verbose_name='название', unique=True)
     description = models.TextField(verbose_name='описание')
 
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, verbose_name='блюдо')
@@ -48,3 +48,18 @@ class Customer(models.Model):
     class Meta:
         verbose_name = 'покупатель'
         verbose_name_plural = 'покупатели'
+
+
+
+class Version(models.Model):
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='versions', verbose_name='Блюдо')
+    number_version = models.CharField(max_length=50, verbose_name='Номер версии')
+    version_name = models.CharField(max_length=100, verbose_name='Название версии')
+    is_current = models.BooleanField(default=False, verbose_name='Текущая версия')
+
+    class Meta:
+        verbose_name = 'Версия'
+        verbose_name_plural = 'Версии'
+
+    def __str__(self):
+        return f'{self.product} - Версия {self.version_number}: {self.version_name}'

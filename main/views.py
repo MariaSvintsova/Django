@@ -9,10 +9,16 @@ from main.models import Dish, Customer
 
 class DishListView(ListView):
     model = Dish
-    # template_name = 'main/dish_list.html'
-    # object_list = Dish.objects.all()
-    # context_object_name = f'{object_list}'
-    # extra_context = {'title': 'SkyStore'}
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        dishes = Dish.objects.all()
+        for dish in dishes:
+            active_version = dish.versions.filter(is_current=True).first()
+            dish.active_version = active_version
+        context['dishes'] = dishes
+        return context
 
 
 def contacts(request):
@@ -37,6 +43,14 @@ class DishCreateView(CreateView):
     fields = ('name', 'description', 'category', 'photo', 'price', 'birthday')
     success_url = reverse_lazy('main:home')
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        CustomerFormset = inlineformset_factory(Dish, Customer, form=CustomerForm, extra=1)
+        if self.request.method == 'POST':
+            context_data['formset'] = CustomerFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = CustomerFormset(instance=self.object)
+        return context_data
 
 
 

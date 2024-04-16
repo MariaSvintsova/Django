@@ -7,6 +7,12 @@
             <h1>{{ dish.name }}</h1>
             <p>Цена: {{ dish.price }}</p>
             <p>Описание: {{ dish.description }}</p>
+            {% if customer %}
+                <p>Покупатель: {{ customer.name }}</p>
+                <p>Покупатель: {{ customer.description }}</p>
+            {% else %}
+                <p>Покупатель не указан</p>
+            {% endif %}
             <img src="{% mediapath dish.photo %}" alt="Cake Image" class="img-fluid" style="max-width: 50%; max-height: 300px; display: block; margin: 0 auto;"/>
         </div>
     </div>
