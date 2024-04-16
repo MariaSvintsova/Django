@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from main.forms import DishForm
+from main.forms import CustomerForm
 from main.models import Dish, Customer
 
 
@@ -50,7 +50,7 @@ class DishUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        CustomerFormset = inlineformset_factory(Dish, Customer, form=DishForm, extra=1)
+        CustomerFormset = inlineformset_factory(Dish, Customer, form=CustomerForm, extra=1)
         if self.request.method == 'POST':
             context_data['formset'] = CustomerFormset(self.request.POST, instance=self.object)
         else:

@@ -24,7 +24,6 @@
                         </h3>
                         <div class="card-body">
                             {{ formset.management_form }}
-                            {% csrf_token %}
                             {% for form in formset.forms %}
                                 {{ form.as_p }}
                             {% endfor %}
