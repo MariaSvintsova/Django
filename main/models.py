@@ -37,7 +37,6 @@ class Dish(models.Model):
 class Customer(models.Model):
     title = models.CharField(max_length=150, verbose_name='название', unique=True)
     description = models.TextField(verbose_name='описание')
-
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, verbose_name='блюдо')
 
 

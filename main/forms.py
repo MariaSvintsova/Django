@@ -1,6 +1,7 @@
 from django import forms
 from django.urls import reverse_lazy
-
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from main.models import Dish, Customer
 
 class StyleFormMixin:
@@ -34,6 +35,20 @@ class DishForm(StyleFormMixin, forms.ModelForm):
                 raise forms.ValidationError(f'Описание не должно содержать запрещенное слово: {word}')
         return description
 
+    def __init__(self, *args, **kwargs):
+        super(DishForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+        self.helper.attrs = {'class': 'form-control'}
+        self.fields['name'].widget.attrs.update({'placeholder': 'Enter name'})
+        self.fields['description'].widget.attrs.update({'placeholder': 'Enter description'})
+        self.fields['category'].widget.attrs.update({'placeholder': 'Choose category'})
+        self.fields['photo'].widget.attrs.update({'placeholder': 'Upload photo'})
+        self.fields['birthday'].widget.attrs.update({'placeholder': 'Enter birthday'})
+
 
 class CustomerForm(StyleFormMixin, forms.ModelForm):
 
@@ -61,3 +76,15 @@ class CustomerForm(StyleFormMixin, forms.ModelForm):
                 raise forms.ValidationError('Вы использовали запрещенные слова')
 
         return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+
+        self.helper.attrs = {'class': 'form-control'}
+        self.fields['title'].widget.attrs.update({'placeholder': 'Enter title'})
+        self.fields['description'].widget.attrs.update({'placeholder': 'Enter description'})
