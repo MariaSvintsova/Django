@@ -3,4 +3,9 @@
     <li><a class="text-muted" href="{% url 'main:home' %}">Главная</a></li>
     <li><a class="text-muted" href="{% url 'materials:list' %}">Материалы</a></li>
     <li><a class="text-muted" href="{% url 'main:contacts' %}">Контакты</a></li>
+    {% if user.is_autentificated %}
+        <li><a class="text-muted" href="{% url 'auth:logout' %}">Выйти</a></li>
+    {% else %}
+        <li><a class="text-muted" href="{% url 'auth:login' %}">Войти</a></li>
+    {% endif %}
 </ul>

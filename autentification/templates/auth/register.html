@@ -1,0 +1,27 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">User Registration</div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'auth:register_success' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

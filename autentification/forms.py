@@ -18,3 +18,9 @@ class UserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class RegisterForm(UserCreationForm):
+    # Наследуемся от специальной формы UserCreationForm из модуля auth
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
