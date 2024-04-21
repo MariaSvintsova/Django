@@ -1,11 +1,14 @@
 from django import forms
+from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 
 class UserCreationForm(forms.ModelForm):
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('email',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,7 +23,25 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 class RegisterForm(UserCreationForm):
-    # Наследуемся от специальной формы UserCreationForm из модуля auth
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = UserCreationForm.Meta.fields + ('username',)
+
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = 'Username'
+        self.fields['email'].label = 'Email'
+        self.fields['password'].label = 'Password'
+
+
+class UserProfileForm(UserChangeForm):
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'password',)
+        fields = ('username', 'email', 'password')
+
+    def __init__(self, *args, **kwargs):
+        super.__init__(*args, **kwargs)
+
+        self.fields['password'].widget = forms.HiddenInput
