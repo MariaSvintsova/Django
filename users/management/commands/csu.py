@@ -1,16 +1,16 @@
 from django.core.management import BaseCommand
-from autentification.models import User
+from users.models import User
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         user = User.objects.create(
-            email='mariasvintsova@gmail.com',
-            first_name='mariasvintsova',
-            last_name='Gmail',
+            email='mariasvintsova123@gmail.com',
             is_stuff=True,
-            is_superuser=True
+            is_superuser=True,
+            phone='89012345678',
+            country='Russia'
         )
         user.set_password('123qwe456rty')
         user.save()
