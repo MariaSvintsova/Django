@@ -1,5 +1,5 @@
-from django.contrib.auth.models import User
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.core.mail import send_mail
@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from config import settings
 from users.forms import UserProfileForm, UserRegisterForm
 from config.settings import EMAIL_HOST_USER
+from users.models import User
 
 
 class RegisterView(CreateView):
@@ -14,12 +15,13 @@ class RegisterView(CreateView):
     form_class = UserRegisterForm
     template_name = 'users/register.html'
     success_url = reverse_lazy('users:register_success')
+    object = None
+
+    def get_success_url(self):
+        return reverse_lazy('users:register_success')
 
     def form_valid(self, form):
-        # response = super().form_valid(form)
         user = form.save()
-
-        user.save()
 
         user_email = user.email
         send_mail(
@@ -31,6 +33,26 @@ class RegisterView(CreateView):
         )
 
         return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            user = form.save()
+            user_email = user.email
+            send_mail(
+                "Подтверждение регистрации",
+                "Добро пожаловать! Вы успешно зарегистрированы.",
+                settings.EMAIL_HOST_USER,
+                recipient_list=[user_email],
+                fail_silently=False,
+            )
+            return redirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = None
+        return context
 
 
 def registration_success(request):
