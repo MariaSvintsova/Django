@@ -1,13 +1,15 @@
-
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView as AuthLogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import CreateView, UpdateView
 from django.core.mail import send_mail
-
+from django.contrib.auth import logout
+from django.views import View
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from config import settings
 from users.forms import UserProfileForm, UserRegisterForm
-from config.settings import EMAIL_HOST_USER
 from users.models import User
 
 
@@ -20,7 +22,6 @@ class RegisterView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('users:register_success')
-
 
     def form_valid(self, form):
         user = form.save()
@@ -81,4 +82,11 @@ class ProfileView(UpdateView):
         return self.request.user
 
 
-# def
+class LoginView(LoginView):
+    template_name = 'users/login.html'
+
+class LogoutView(AuthLogoutView):
+    next_page = "users:login"
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)

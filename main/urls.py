@@ -4,7 +4,8 @@ from main import views
 from main.apps import MainConfig
 from main.views import DishListView, DishDetailView, contacts, DishCreateView, DishUpdateView, toggle_activity
 
-app_name = MainConfig.name
+# app_name = MainConfig.name
+app_name = 'main'
 
 urlpatterns = [
     path('', DishListView.as_view(), name='home'),

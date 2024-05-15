@@ -6,7 +6,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from main.forms import CustomerForm
 from main.models import Dish, Customer
 
-
 class DishListView(ListView):
     model = Dish
 
