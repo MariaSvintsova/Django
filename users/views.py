@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.core.mail import send_mail
+
+from config import settings
 from users.forms import UserProfileForm, UserRegisterForm
 from config.settings import EMAIL_HOST_USER
 
@@ -11,7 +13,7 @@ class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'users/register.html'
-    # success_url = reverse_lazy('users:register_success')
+    success_url = reverse_lazy('users:register_success')
 
     def form_valid(self, form):
         # response = super().form_valid(form)
@@ -23,7 +25,7 @@ class RegisterView(CreateView):
         send_mail(
             "Подтверждение регистрации",
             "Добро пожаловать! Вы успешно зарегистрированы.",
-            from_email=EMAIL_HOST_USER,
+            settings.EMAIL_HOST_USER,
             recipient_list=[user_email],
             fail_silently=False,
         )
