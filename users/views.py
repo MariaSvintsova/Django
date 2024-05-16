@@ -105,6 +105,7 @@ class LogoutView(AuthLogoutView):
 
 class PasswordResetView(View):
     form_class = PasswordResetForm
+
     def get(self, request):
         return render(request, 'users/password_reset.html')
 

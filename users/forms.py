@@ -23,4 +23,4 @@ class UserProfileForm(UserChangeForm):
         self.fields['password'].widget = forms.HiddenInput
 
 class PasswordResetForm(PasswordResetForm):
-    email = forms.EmailField(label='Email', max_length=254)
+    email = forms.EmailField(label='Email', max_length=254, widget=forms.EmailInput(attrs={'autocomplete': 'email', 'class': 'form-control', 'placeholder': 'Введите ваш email'}))
