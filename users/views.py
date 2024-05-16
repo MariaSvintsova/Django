@@ -14,7 +14,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from config import settings
-from users.forms import UserProfileForm, UserRegisterForm
+from users.forms import UserProfileForm, UserRegisterForm, PasswordResetForm
 from users.models import User
 
 
@@ -104,6 +104,7 @@ class LogoutView(AuthLogoutView):
         return super().post(request, *args, **kwargs)
 
 class PasswordResetView(View):
+    form_class = PasswordResetForm
     def get(self, request):
         return render(request, 'users/password_reset.html')
 

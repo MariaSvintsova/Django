@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm, PasswordResetForm
 from users.models import User
 
 
@@ -21,3 +21,6 @@ class UserProfileForm(UserChangeForm):
         super.__init__(*args, **kwargs)
 
         self.fields['password'].widget = forms.HiddenInput
+
+class PasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(label='Email', max_length=254)

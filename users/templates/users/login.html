@@ -15,17 +15,7 @@
                             {{ form.as_p }}
                             <button type="submit" class="btn btn-success">Войти</button>
                         </div>
-                        <h2>Восстановить пароль</h2>
-                        <form method="post" action="{% url 'users:password_reset' %}">
-                            {% csrf_token %}
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                            <button type="submit">Восстановить пароль</button>
-                        </form>
-
-                        {% if error %}
-                            <p>{{ error }}</p>
-                        {% endif %}
+                        <a href="{% url 'users:password_reset' %}">Восстановить пароль</a>
                     </body>
                     </html>
                     </div>
