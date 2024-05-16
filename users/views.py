@@ -28,19 +28,19 @@ class RegisterView(CreateView):
     def get_success_url(self):
         return reverse_lazy('users:register_success')
 
-    # def form_valid(self, form):
-    #     user = form.save()
-    #
-    #     user_email = user.email
-    #     send_mail(
-    #         "Подтверждение регистрации",
-    #         "Добро пожаловать! Вы успешно зарегистрированы.",
-    #         settings.EMAIL_HOST_USER,
-    #         recipient_list=[user_email],
-    #         fail_silently=False,
-    #     )
-    #
-    #     return super().form_valid(form)
+    def form_valid(self, form):
+        user = form.save()
+
+        user_email = user.email
+        send_mail(
+            "Подтверждение регистрации",
+            "Добро пожаловать! Вы успешно зарегистрированы.",
+            settings.EMAIL_HOST_USER,
+            recipient_list=[user_email],
+            fail_silently=False,
+        )
+
+        return super().form_valid(form)
 
     # def post(self, request, *args, **kwargs):
     #     form = self.get_form()
