@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -37,7 +38,7 @@ class DishDetailView(DetailView):
 
 
 
-class DishCreateView(CreateView):
+class DishCreateView(LoginRequiredMixin, CreateView):
     model = Dish
     fields = ('name', 'description', 'category', 'photo', 'price', 'birthday')
     success_url = reverse_lazy('main:home')
@@ -51,9 +52,13 @@ class DishCreateView(CreateView):
             context_data['formset'] = CustomerFormset(instance=self.object)
         return context_data
 
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.owner = user
+        return super().form_valid(form)
 
 
-class DishUpdateView(UpdateView):
+class DishUpdateView(LoginRequiredMixin, UpdateView):
     model = Dish
     fields = ('name', 'description', 'category', 'photo', 'price', 'birthday')
     success_url = reverse_lazy('main:home')

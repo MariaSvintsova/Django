@@ -107,7 +107,8 @@ class PasswordResetView(View):
     form_class = PasswordResetForm
 
     def get(self, request):
-        return render(request, 'users/password_reset.html')
+        form = self.form_class()
+        return render(request, 'users/password_reset.html', {'form': form})
 
     def post(self, request):
         email = request.POST.get('email')

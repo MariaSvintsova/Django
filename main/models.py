@@ -1,5 +1,7 @@
 from django.db import models
 
+
+
 NULLABLE = {'blank': True, 'null': True}
 
 class Category(models.Model):
@@ -22,7 +24,7 @@ class Dish(models.Model):
     photo = models.ImageField(upload_to='items', **NULLABLE, verbose_name='Фото')
     price = models.IntegerField(verbose_name='цена за единицу')
     birthday = models.DateField(**NULLABLE, verbose_name='Дата рождения')
-
+    owner = models.ForeignKey('users.User', **NULLABLE, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
 
