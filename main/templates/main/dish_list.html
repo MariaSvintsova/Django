@@ -39,6 +39,7 @@
                                 <a class="btn btn-success " href="{% url 'main:edit_dish_category' object.pk %}">Менять категорию</a>
                             </div>
                         {% endif %}
+
                     </ul>
                     <button type="button" class="btn btn-lg btn-block btn-outline-primary" onclick="window.location.href='{% url 'main:dish_detail' pk=object.id %}'">Купить</button>
                 </div>
