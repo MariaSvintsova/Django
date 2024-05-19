@@ -3,10 +3,13 @@ import string
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView as AuthLogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.generic import CreateView, UpdateView
 from django.core.mail import send_mail
 from django.contrib.auth import logout
@@ -30,11 +33,16 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        user.is_active = False
+
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        verification_link = self.request.build_absolute_uri(reverse('users:activate', args=[uid, token]))
 
         user_email = user.email
         send_mail(
             "Подтверждение регистрации",
-            "Добро пожаловать! Вы успешно зарегистрированы.",
+            f"Добро пожаловать! Подтвердите вашу регистрацию по следующей ссылке: {verification_link}",
             settings.EMAIL_HOST_USER,
             recipient_list=[user_email],
             fail_silently=False,

@@ -32,14 +32,20 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, verbose_name='Номер телефона')
     country = models.CharField(max_length=100, verbose_name='Ваша страна')
     is_stuff = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=True, verbose_name='Опубликован')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.first_name} {self.last_name}'
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
+            ("can_edit_product_description", "Can edit product description"),
+            ("can_edit_product_category", "Can edit product category"),
+        ]

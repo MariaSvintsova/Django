@@ -35,6 +35,11 @@ class Dish(models.Model):
     class Meta:
         verbose_name = 'Вещь'
         verbose_name_plural = 'Предметы'
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
+            ("can_edit_product_description", "Can edit product description"),
+            ("can_edit_product_category", "Can edit product category"),
+        ]
 
 class Customer(models.Model):
     title = models.CharField(max_length=150, verbose_name='название', unique=True)

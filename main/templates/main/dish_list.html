@@ -31,9 +31,14 @@
                             <a class='btn btn-warning' href="{% url 'main:toggle_activity' object.pk %}">Деактивировать</a>
                         {% else %}
                              <a class='btn btn-success' href="{% url 'main:toggle_activity' object.pk %}">Активировать</a>
-
                         {% endif %}
                         </div>
+                        {% if request.user == object.owner or can_edit_product_description or can_edit_product_category %}
+                            <div div class="mt-3 d-flex flex-column align-items-center">
+                                <a class="btn btn-success mb-2 mr-2" href="{% url 'main:edit_dish_description' object.pk %}">Редактировать описание</a>
+                                <a class="btn btn-success " href="{% url 'main:edit_dish_category' object.pk %}">Менять категорию</a>
+                            </div>
+                        {% endif %}
                     </ul>
                     <button type="button" class="btn btn-lg btn-block btn-outline-primary" onclick="window.location.href='{% url 'main:dish_detail' pk=object.id %}'">Купить</button>
                 </div>

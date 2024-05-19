@@ -141,10 +141,9 @@ LOGIN_REDIRECT_URL = 'main:home'
 LOGOUT_REDIRECT_URL = 'users:login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'testovich12345bla@gmail.com'
-EMAIL_HOST_PASSWORD = 'aqfmhahmnzkdtaxk'
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_SSL_VERIFY = False
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'degaleneo@yandex.ru'
+EMAIL_HOST_PASSWORD = 'nuKe4cYVwu8f'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True

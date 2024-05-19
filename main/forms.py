@@ -11,6 +11,12 @@ class StyleFormMixin:
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+class DishModeratorForm(StyleFormMixin, forms.ModelForm):
+
+    class Meta:
+        model = Dish
+        fields = ('description', 'category')
+
 
 class DishForm(StyleFormMixin, forms.ModelForm):
 
@@ -88,3 +94,13 @@ class CustomerForm(StyleFormMixin, forms.ModelForm):
         self.helper.attrs = {'class': 'form-control'}
         self.fields['title'].widget.attrs.update({'placeholder': 'Enter title'})
         self.fields['description'].widget.attrs.update({'placeholder': 'Enter description'})
+
+class DishCategoryForm(forms.ModelForm):
+    class Meta:
+        model = Dish
+        fields = ['category']
+
+class DishDescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Dish
+        fields = ['description']
