@@ -17,6 +17,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from config import settings
+from main.services import send_email
 from users.forms import UserProfileForm, UserRegisterForm, PasswordResetForm
 from users.models import User
 
@@ -40,35 +41,12 @@ class RegisterView(CreateView):
         verification_link = self.request.build_absolute_uri(reverse('users:activate', args=[uid, token]))
 
         user_email = user.email
-        send_mail(
-            "Подтверждение регистрации",
-            f"Добро пожаловать! Подтвердите вашу регистрацию по следующей ссылке: {verification_link}",
-            settings.EMAIL_HOST_USER,
-            recipient_list=[user_email],
-            fail_silently=False,
-        )
+        subject = "Подтверждение регистрации"
+        message = f"Добро пожаловать! Подтвердите вашу регистрацию по следующей ссылке: {verification_link}"
+        send_email(subject, message,  [user_email])
 
         return super().form_valid(form)
 
-    # def post(self, request, *args, **kwargs):
-    #     form = self.get_form()
-    #     if form.is_valid():
-    #         user = form.save()
-    #         user_email = user.email
-    #         send_mail(
-    #             "Подтверждение регистрации",
-    #             "Добро пожаловать! Вы успешно зарегистрированы.",
-    #             settings.EMAIL_HOST_USER,
-    #             recipient_list=[user_email],
-    #             fail_silently=False,
-    #         )
-    #         return redirect(self.get_success_url())
-    #     else:
-    #         return self.form_invalid(form)
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['object'] = None
-    #     return context
 
 
 def registration_success(request):
@@ -126,13 +104,10 @@ class PasswordResetView(View):
             user.password = make_password(new_password)
             user.save()
 
-            send_mail(
-                'Восстановление пароля',
-                f'Ваш новый пароль: {new_password}',
-                settings.EMAIL_HOST_USER,
-                [email],
-                fail_silently=False,
-            )
+            subject = 'Восстановление пароля',
+            message = f'Ваш новый пароль: {new_password}',
+            send_email(subject, message, [email])
+
             return render(request, 'users/password_reset_done.html')
         except User.DoesNotExist:
             return render(request, 'users/password_reset.html', {'error': 'Пользователь с таким email не найден.'})

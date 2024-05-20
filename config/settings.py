@@ -12,18 +12,21 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@yxs8zh$*&%oq&0xpkxngw45gu-%$-x@*6as-gczsdhx3-j((9'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -79,12 +82,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_db',
+        'ENGINE': os.getenv('ENGINE'),
+        'NAME': os.getenv('NAME'),
         'USER': 'postgres',
-        'HOST': '127.0.0.1',
-        'PASSWORD': 'Msssvintsova006',
-        'PORT': 5432
+        'HOST': os.getenv('HOST'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'PORT': os.getenv('PORT')
     }
 }
 
@@ -131,7 +134,7 @@ STATICFILES_DIRS = (
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = os.getenv('DEFAULT_AUTO_FIELD')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -140,10 +143,22 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'main:home'
 LOGOUT_REDIRECT_URL = 'users:login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'degaleneo@yandex.ru'
-EMAIL_HOST_PASSWORD = 'nuKe4cYVwu8f'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL')
+
+
+СACHE_ENABLED = os.getenv('СACHE_ENABLED') == 'True'
+
+if СACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv('СACHE_LOCATION'),
+        }
+    }
+

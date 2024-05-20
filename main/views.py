@@ -1,13 +1,18 @@
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from main.forms import CustomerForm, DishForm, DishModeratorForm, DishCategoryForm, DishDescriptionForm
 from main.models import Dish, Customer
+from main.services import get_cached_customers_for_dish, get_cached_categories
+
 
 class DishListView(ListView):
     model = Dish
@@ -20,6 +25,7 @@ class DishListView(ListView):
             active_version = dish.versions.filter(is_current=True).first()
             dish.active_version = active_version
         context['dishes'] = dishes
+        context['categories'] = get_cached_categories()
         context['can_edit_product_description'] = self.request.user.has_perm('main.can_edit_product_description')
         context['can_edit_product_category'] = self.request.user.has_perm('main.can_edit_product_category')
         return context
@@ -35,10 +41,19 @@ def contacts(request):
     return render(request, 'main/contacts.html')
 
 
-class DishDetailView(DetailView):
+class DishDetailView(LoginRequiredMixin, DetailView):
     model = Dish
-    # template_name = 'main/dish_detail.html'
-    # context_object_name = 'dish'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['customer'] = get_cached_customers_for_dish(self.object.pk)
+        context_data['categories'] = get_cached_categories()
+        context_data['is_owner'] = self.request.user == self.object.owner
+        context_data['can_edit'] = self.request.user.has_perm(
+            'main.can_edit_product_description') or \
+            self.request.user.has_perm('main.can_edit_product_category')
+        return context_data
+
 
 
 
@@ -93,6 +108,8 @@ class DishUpdateView(LoginRequiredMixin, UpdateView):
         if user.has_perm("can_unpublish_product") and user.has_perm("can_edit_product_description") and user.has_perm("can_edit_product_category"):
             return DishModeratorForm
         raise PermissionDenied
+
+@cache_page(60)
 def toggle_activity(request, pk):
     dish_item = get_object_or_404(Dish, pk=pk)
     if dish_item.is_active:
