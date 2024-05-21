@@ -6,10 +6,14 @@ from main.models import Category, Customer
 
 
 def get_cached_categories():
-    categories = cache.get('categories')
-    if not categories:
+    if settings.СACHE_ENABLED:
+        key = 'category_list'
+        categories = cache.get(key)
+        if not categories:
+            categories = list(Category.objects.all())
+            cache.set(key, categories, 60 * 60)
+    else:
         categories = list(Category.objects.all())
-        cache.set('categories', categories, 60 * 60)
     return categories
 
 def get_cached_customers_for_dish(dish_pk):

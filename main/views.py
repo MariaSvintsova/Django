@@ -44,6 +44,10 @@ def contacts(request):
 class DishDetailView(LoginRequiredMixin, DetailView):
     model = Dish
 
+    @cache_page(cache_page(60 * 15))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['customer'] = get_cached_customers_for_dish(self.object.pk)

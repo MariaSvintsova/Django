@@ -43,7 +43,7 @@ class RegisterView(CreateView):
         user_email = user.email
         subject = "Подтверждение регистрации"
         message = f"Добро пожаловать! Подтвердите вашу регистрацию по следующей ссылке: {verification_link}"
-        send_email(subject, message,  [user_email])
+        send_email(subject, message, [user_email])
 
         return super().form_valid(form)
 
